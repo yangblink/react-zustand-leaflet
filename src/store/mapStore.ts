@@ -10,5 +10,11 @@ interface ZustandMap {
 export const useZustandMap = create<ZustandMap>((set) => ({
   map: null,
   bears: 0,
-  setMap: (val) => set(() => ({ map: val }))
+  // setMap: (val) => set(() => ({ map: val }))
+  setMap: (val) => set(() => {
+    console.log('val', val)
+    return {
+      map: val
+    }
+  })
 }))

@@ -1,4 +1,4 @@
-import { MultiPolygon, FeatureCollection } from 'geojson';
+import { MultiPolygon, FeatureCollection, Feature, Polygon, GeoJsonProperties } from 'geojson';
 import geoJSON from '@/data/zhejiang.json'
 import * as turf from '@turf/turf';
 import L from 'leaflet'
@@ -6,13 +6,32 @@ import { useZustandMap} from '@/store/mapStore'
 
 let geoData: FeatureCollection<MultiPolygon> = geoJSON as FeatureCollection<MultiPolygon>
 
+interface Areas {
+  area: number;
+  pol: Feature<Polygon, GeoJsonProperties>
+}
 export default function MapPage () {
 
-  const mapRef = useZustandMap((state) => state.map)
-  const map = mapRef?.map as L.Map
+  const map = useZustandMap((state) => state.map) as L.Map
+  if (!map) {
+    return <></>
+  }
 
-  console.log('map page init...', mapRef)
+  console.log('map page init...', map)
 
+  let geoJsonLayer: L.Layer | null = null
+  let layerGroup = L.layerGroup().addTo(map);
+
+  function delLayer() {
+    // map.eachLayer(layer => {
+    //   console.log('🚀 ~ delLayer ~ layer:', layer)
+    // })
+    layerGroup.clearLayers()
+    // if (geoJsonLayer) {
+    //   map.removeLayer(geoJsonLayer)
+    //   geoJsonLayer = null
+    // }
+  }
   function addLayer() {
     console.log('add layer')
 
@@ -20,7 +39,7 @@ export default function MapPage () {
       let center = turf.center(geo)
 
       if (geo.geometry.coordinates.length > 1) {
-        let areas = []
+        let areas: Areas[] = []
         geo.geometry.coordinates.forEach(polygon => {
           let pol = turf.polygon(polygon)
           let area = turf.area(pol)
@@ -30,10 +49,10 @@ export default function MapPage () {
         center = turf.center(areas[0].pol)
       }
 
-      let [jd, wd] = geo.properties.center
-      addTitle(wd, jd, geo.properties.name, map)
+      let [jd, wd] = geo.properties?.center
+      addTitle(wd, jd, geo.properties?.name, map)
 
-      L.geoJSON(geo, {
+      geoJsonLayer = L.geoJSON(geo, {
         style: function (feature) {
           return {
             color: getRandomHexColor(),
@@ -41,6 +60,7 @@ export default function MapPage () {
           }
         }
       }).addTo(map)
+      layerGroup.addLayer(geoJsonLayer)
     })
   }
   function addTitle(wd: number, jd: number, text: string, map: L.Map) {
@@ -68,6 +88,7 @@ export default function MapPage () {
   return <>
     <div>
       <button onClick={addLayer}>添加图层</button>
+      <button onClick={delLayer}>删除图层</button>
     </div>
   </>
 }

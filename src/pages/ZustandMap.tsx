@@ -2,7 +2,7 @@ import { useZustandMap } from '@/store/mapStore'
 import { useRef, useEffect } from 'react'
 import L from 'leaflet';
 
-export default function Test() {
+export default function ZustandMap() {
   const map = useZustandMap((state) => state.map)
   const setMap = useZustandMap((state) => state.setMap)
 
@@ -11,7 +11,7 @@ export default function Test() {
 
   useEffect(() => {
     if (!mapRef.current && mapContainerRef.current) {
-      console.log('init leaflet map')
+      // console.log('init leaflet map')
       mapRef.current = L.map(mapContainerRef.current, {
         center: [28.16, 121.4],
         // zoom: 14, //缩放比列
@@ -20,13 +20,13 @@ export default function Test() {
         doubleClickZoom: true, // 禁用双击放大
         attributionControl: false, // 移除右下角leaflet标识
       })
-      let name = L.tileLayer(
+      L.tileLayer(
         "http://webrd01.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=7&x={x}&y={y}&z={z}",
       ).addTo(mapRef.current)
 
-      console.log('🚀 ~ useEffect ~ mapRef:', mapRef)
-      setMap({ map: mapRef.current })
-      // setMap(mapRef.current)
+      // console.log('🚀 ~ useEffect ~ mapRef:', mapRef)
+      // setMap({ map: mapRef.current })
+      setMap(mapRef.current)
     }
 
     return () => {
@@ -37,7 +37,6 @@ export default function Test() {
     };
   }, []);
 
-  console.log('🚀 ~ Test ~ map: ----------', map)
   return <>
     <div ref={mapContainerRef} style={{ height: '80vh', width: '100%' }} />
   </>
