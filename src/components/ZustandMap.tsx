@@ -10,10 +10,8 @@ export default function ZustandMap() {
 
   useEffect(() => {
     if (!mapRef.current && mapContainerRef.current) {
-      // console.log('init leaflet map')
       mapRef.current = L.map(mapContainerRef.current, {
         center: [28.16, 121.4],
-        // zoom: 14, //缩放比列
         zoom: 7, //缩放比列
         zoomControl: true, //禁用 + - 按钮
         doubleClickZoom: true, // 禁用双击放大
@@ -23,8 +21,6 @@ export default function ZustandMap() {
         "http://webrd01.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=7&x={x}&y={y}&z={z}",
       ).addTo(mapRef.current)
 
-      // console.log('🚀 ~ useEffect ~ mapRef:', mapRef)
-      // setMap({ map: mapRef.current })
       setMap(mapRef.current)
     }
 

@@ -17,8 +17,6 @@ export default function MapPage () {
     return <></>
   }
 
-  console.log('map page init...', map)
-
   let geoJsonLayer: L.Layer | null = null
   let layerGroup = L.layerGroup().addTo(map)
   let featureGroup = L.featureGroup().addTo(map)
@@ -28,7 +26,6 @@ export default function MapPage () {
     featureGroup.clearLayers()
   }
   function addLayer() {
-    console.log('add layer')
 
     geoData.features.forEach(geo => {
       let center = turf.center(geo)
@@ -44,7 +41,6 @@ export default function MapPage () {
         center = turf.center(areas[0].pol)
       }
 
-      // let [jd, wd] = geo.properties?.center
       let [jd, wd] = center.geometry.coordinates
       addTitle(wd, jd, geo.properties?.name, map)
 
