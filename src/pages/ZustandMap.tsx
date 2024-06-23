@@ -3,7 +3,6 @@ import { useRef, useEffect } from 'react'
 import L from 'leaflet';
 
 export default function ZustandMap() {
-  const map = useZustandMap((state) => state.map)
   const setMap = useZustandMap((state) => state.setMap)
 
   const mapRef = useRef<L.Map | null>(null);

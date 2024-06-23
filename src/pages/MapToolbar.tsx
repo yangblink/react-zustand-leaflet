@@ -20,17 +20,12 @@ export default function MapPage () {
   console.log('map page init...', map)
 
   let geoJsonLayer: L.Layer | null = null
-  let layerGroup = L.layerGroup().addTo(map);
+  let layerGroup = L.layerGroup().addTo(map)
+  let featureGroup = L.featureGroup().addTo(map)
 
   function delLayer() {
-    // map.eachLayer(layer => {
-    //   console.log('🚀 ~ delLayer ~ layer:', layer)
-    // })
     layerGroup.clearLayers()
-    // if (geoJsonLayer) {
-    //   map.removeLayer(geoJsonLayer)
-    //   geoJsonLayer = null
-    // }
+    featureGroup.clearLayers()
   }
   function addLayer() {
     console.log('add layer')
@@ -49,11 +44,12 @@ export default function MapPage () {
         center = turf.center(areas[0].pol)
       }
 
-      let [jd, wd] = geo.properties?.center
+      // let [jd, wd] = geo.properties?.center
+      let [jd, wd] = center.geometry.coordinates
       addTitle(wd, jd, geo.properties?.name, map)
 
       geoJsonLayer = L.geoJSON(geo, {
-        style: function (feature) {
+        style: function () {
           return {
             color: getRandomHexColor(),
             weight: 2
@@ -74,6 +70,7 @@ export default function MapPage () {
     var customMarker = L.marker([wd, jd], {
         icon: customIcon
     }).addTo(map);
+    featureGroup.addLayer(customMarker)
   }
 
   function getRandomHexColor(): string {
